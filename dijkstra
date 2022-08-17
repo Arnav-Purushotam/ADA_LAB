@@ -1,0 +1,102 @@
+//dijkstra algo, shortest path algo
+
+//maintain a set of processed nodes
+//assign all nodes with distance value infinity except source node (0)
+//repeat following (until all nodes included)
+  //1] pick min value vertex which is not already processed
+  //2] include this selected node in processed set
+  //3] update all the adjacent node distances
+  //   if new distance < old distance then update else skip
+
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+#define V 6
+
+//use a visited array
+//use a value array
+//use parent array to store the shortest path graph
+
+
+
+int SelectMinValueVertex(int value[],bool processed[]){
+    
+    int minimum = INT_MAX;
+    int min_index;
+    
+    for(int i=0; i<V;i++){
+        if(value[i] < minimum && processed[i] == false){
+            minimum = value[i];
+            min_index = i;
+        }
+    }
+    
+    return min_index;
+    
+}
+
+
+
+
+void dijkstra(int graph[V][V]){
+    
+    int parent[V];
+    int value[V];
+    bool processed[V];
+    
+    for(int i=0; i< V;i++){
+        value[i] = INT_MAX;
+        processed[i] = false;
+    }
+    
+    parent[0] = -1;
+    value[0] = 0;
+    
+    //include V-1 edges to cover all
+    for(int i=0;i<V-1;i++){
+        
+        int U = SelectMinValueVertex(value,processed);
+        processed[U] = true;
+        
+        for(int j=0;j<V;j++){
+            
+            
+            if(graph[U][j] != 0  &&  processed[j] == false  &&  value[U] != INT_MAX  &&  value[j] > value[U] + graph[U][j]){
+                value[j] = value[U] + graph[U][j];
+                //put as parent only if min value is found
+                //as the parent array is what gives the final Shortest Path Graph
+                parent[j] = U;
+            }
+            
+        }
+        
+        
+    }
+    
+    //print shortest path Graph
+    //i starts from 1 as 0 has no parent, but 1 has a parent which is 0
+    for(int i=1;i<V-1;i++){
+        printf("\n%d -> %d, wt = %d",parent[i],i,graph[parent[i]][i]);
+    }
+    
+}
+
+
+
+int main()
+{
+    int graph[V][V] = {
+        {0,1,4,0,0,0},
+        {1,0,4,2,7,0},
+        {4,4,0,3,5,0},
+        {0,2,3,0,4,6},
+        {0,7,5,4,0,7},
+        {0,0,0,6,7,0},
+    };
+    
+    
+    dijkstra(graph);
+
+    return 0;
+}
