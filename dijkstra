@@ -76,7 +76,7 @@ void dijkstra(int graph[V][V]){
     
     //print shortest path Graph
     //i starts from 1 as 0 has no parent, but 1 has a parent which is 0
-    for(int i=1;i<V-1;i++){
+    for(int i=1;i<V;i++){
         printf("\n%d -> %d, wt = %d",parent[i],i,graph[parent[i]][i]);
     }
     
