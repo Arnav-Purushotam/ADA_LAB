@@ -1,0 +1,86 @@
+//floyd warshall
+//all pair shortest path algo
+//basically to find shortest path between each and every pair of vertices
+//it can detect negative edge weight cycle
+//if we have a negative distance from a vertex to itself then we have a negative edge weight cycle
+
+//we include each vertex one by one in calculation of shortest path
+//as soon as we find a shorter path we update our shortest path value
+//d[i][j] = min(d[i][j], d[i][k] + d[k][j])
+//distances don't get modified for adjacent vertices
+//initially we know only the distances to adjacent vertices
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+#define V 6
+
+
+void floyd_warshal(int graph[V][V]){
+    
+    int distance[V][V];
+    
+    for(int i=0;i<V;i++){
+        for(int j=0;j<V;j++){
+            distance[i][j] = graph[i][j];
+        }
+    }
+    
+    
+    //outer loop: using k as the intermediary
+    for(int k=0;k<V;k++){
+        //first inner loop: finding for all possible starting paths
+        for(int i=0;i<V;i++){
+            //second inner loop: finding for all possible inner paths
+            for(int j=0;j<V;j++){
+                
+                if(distance[i][k] == INT_MAX || distance[k][j] == INT_MAX){
+                    continue;
+                }   //if k is unreachable from i or j is unreachable from k, then skip
+                else if(distance[i][j] > distance[i][k] + distance[k][j]) {
+                    distance[i][j] = distance[i][k] + distance[k][j];
+                }
+            }
+        }
+    }
+    
+    //check for negative weight cycles
+    for(int i=0;i<V;i++){
+        if(distance[i][i] < 0){
+            printf("\n negative weight cycle exists");
+            return;
+        }
+    }
+    
+    //print shortest paths graph
+    //basically print the distance, after whole algo
+    for(int i=0;i<V;i++){
+        printf("\n");
+        for(int j=0;j<V;j++){
+            printf(" %d",distance[i][j]);
+        }
+    }    
+    
+}
+
+
+
+
+
+
+int main()
+{
+    int graph[V][V] = {
+        {0,1,4,INT_MAX,INT_MAX,INT_MAX},
+        {INT_MAX,0,4,2,7,INT_MAX},
+        {INT_MAX,INT_MAX,0,3,4,INT_MAX},
+        {INT_MAX,INT_MAX,INT_MAX,0,INT_MAX,4},
+        {INT_MAX,INT_MAX,INT_MAX,3,0,INT_MAX},
+        {INT_MAX,INT_MAX,INT_MAX,INT_MAX,5,0}
+        
+    };
+    
+    floyd_warshal(graph);
+
+    return 0;
+}
